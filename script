@@ -7,7 +7,6 @@ local function createPlayerESP(player)
     -- Check if the player has a character and humanoid
     local character = player.Character
     if character and character:FindFirstChildOfClass("Humanoid") then
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
         local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")
         local head = character:FindFirstChild("Head")
         local rightHand = character:FindFirstChild("RightHand")
@@ -24,7 +23,7 @@ local function createPlayerESP(player)
             line.CFrame = CFrame.new(startPoint, endPoint) * CFrame.new(0, 0, -line.Size.Z / 2)
             line.Color = HighlightColor
             line.Material = Enum.Material.Neon -- Make the line material Neon
-            line.Parent = torso
+            line.Parent = workspace
         end
 
         createLine(torso.Position, head.Position)
@@ -52,4 +51,4 @@ game.Players.PlayerAdded:Connect(function(player)
     if player ~= game.Players.LocalPlayer then
         createPlayerESP(player)
     end
-end)
+end)end)
