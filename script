@@ -1,6 +1,5 @@
 -- Configuration
 local HighlightColor = Color3.fromRGB(255, 0, 0) -- Red color for highlighting
-local Transparency = 0.7 -- Transparency of the highlight
 local Thickness = 0.1 -- Thickness of the lines
 
 -- Function to create an ESP for a player
@@ -24,7 +23,7 @@ local function createPlayerESP(player)
             line.Size = Vector3.new(Thickness, Thickness, (startPoint - endPoint).magnitude)
             line.CFrame = CFrame.new(startPoint, endPoint) * CFrame.new(0, 0, -line.Size.Z / 2)
             line.Color = HighlightColor
-            line.Transparency = Transparency
+            line.Material = Enum.Material.Neon -- Make the line material Neon
             line.Parent = torso
         end
 
