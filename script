@@ -5,7 +5,7 @@ local OutlineThickness = 0.1 -- Thickness of the outline
 local NameTextColor = Color3.fromRGB(255, 255, 255) -- Color of the player's name
 local NameTextSize = 12 -- Size of the player's name
 
--- Function to create the highlight for a player
+-- Function to create the ESP for a player
 local function createESP(player)
     -- Check if the player has a character and humanoid
     local character = player.Character
@@ -26,8 +26,9 @@ local function createESP(player)
             billboard.Name = "NameTag"
             billboard.Size = UDim2.new(0, 100, 0, 20)
             billboard.StudsOffset = Vector3.new(0, 3, 0) -- Offset the name tag above the ESP
+            billboard.Adornee = humanoidRootPart
             billboard.AlwaysOnTop = true
-            billboard.Parent = outline
+            billboard.Parent = humanoidRootPart
 
             local nameLabel = Instance.new("TextLabel")
             nameLabel.Size = UDim2.new(1, 0, 1, 0)
