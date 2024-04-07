@@ -9,24 +9,27 @@ local function createPlayerESP(player)
     local character = player.Character
     if character and character:FindFirstChildOfClass("Humanoid") then
         local humanoid = character:FindFirstChildOfClass("Humanoid")
-        local torso = character:FindFirstChild("Torso") or character:FindFirstChild("UpperTorso")
+        local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")
         local head = character:FindFirstChild("Head")
         local rightHand = character:FindFirstChild("RightHand")
         local leftHand = character:FindFirstChild("LeftHand")
-        local rightLeg = character:FindFirstChild("RightLeg")
-        local leftLeg = character:FindFirstChild("LeftLeg")
+        local rightLeg = character:FindFirstChild("RightFoot")
+        local leftLeg = character:FindFirstChild("LeftFoot")
 
         -- Create lines connecting body parts
         local function createLine(startPart, endPart)
             if startPart and endPart then
                 local line = Instance.new("LineHandleAdornment")
                 line.Name = "ESP_Line_" .. startPart.Name .. "_" .. endPart.Name
-                line.Adornee = workspace
-                line.CFrame = CFrame.new(startPart.Position, endPart.Position)
+                line.Parent = startPart
+                line.Adornee = startPart.Parent
                 line.Color3 = HighlightColor
                 line.Transparency = Transparency
                 line.Thickness = Thickness
-                line.Parent = startPart
+                line.ZIndex = 1
+                line.CurveSize = 0
+                line.Length = (startPart.Position - endPart.Position).magnitude
+                line.CFrame = CFrame.new(startPart.Position, endPart.Position) * CFrame.new(0, 0, -line.Length / 2)
             end
         end
 
