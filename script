@@ -9,30 +9,29 @@ local function createHighlight(player)
     -- Check if the player has a character and humanoid
     local character = player.Character
     if character and character:FindFirstChildOfClass("Humanoid") then
-        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
         local humanoid = character:FindFirstChildOfClass("Humanoid")
         local head = character:FindFirstChild("Head")
 
-        if humanoidRootPart and humanoid and head then
+        if humanoid and head then
             -- Create an outline for the player's character
             local outline = Instance.new("SelectionBox")
             outline.Name = "Outline"
-            outline.Adornee = humanoidRootPart
+            outline.Adornee = character
             outline.Color3 = OutlineColor
             outline.LineThickness = 0.1
             outline.SurfaceTransparency = 1
-            outline.Parent = humanoidRootPart
+            outline.Parent = character
 
             -- Create a highlight for the player's body
             local highlight = Instance.new("BoxHandleAdornment")
             highlight.Name = "Highlight"
-            highlight.Adornee = humanoidRootPart
+            highlight.Adornee = character
             highlight.AlwaysOnTop = true
             highlight.Color3 = HighlightColor
             highlight.Size = character:GetExtentsSize() * 1.1 -- Make the highlight slightly larger than the player's character
             highlight.Transparency = 0.5
             highlight.ZIndex = 5
-            highlight.Parent = humanoidRootPart
+            highlight.Parent = character
 
             -- Create a billboard GUI for the player's name
             local billboard = Instance.new("BillboardGui")
@@ -64,7 +63,7 @@ local function createHighlight(player)
             particleEmitter.Texture = "rbxassetid://250818607"
             particleEmitter.Transparency = NumberSequence.new(0.5)
             particleEmitter.Acceleration = Vector3.new(0, -5, 0)
-            particleEmitter.Parent = head
+            particleEmitter.Parent = character
 
             -- Connect to the player removing event
             player.CharacterRemoving:Connect(function()
