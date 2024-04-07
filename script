@@ -31,7 +31,7 @@ local function createHighlight(player)
                     highlight.AlwaysOnTop = true
                     highlight.Color3 = HighlightColor
                     highlight.Size = bodyPart.Size * 1.1 -- Make the highlight slightly larger than the body part
-                    highlight.Transparency = 0.3 -- Less transparent
+                    highlight.Transparency = 0.2 -- Less transparent
                     highlight.ZIndex = 5
                     highlight.Parent = bodyPart
                 end
@@ -53,33 +53,6 @@ local function createHighlight(player)
             nameLabel.Font = Enum.Font.SourceSansBold
             nameLabel.TextSize = NameTextSize
             nameLabel.Parent = billboard
-
-            -- Create particle emitter for smoke effect
-            local particleEmitter = Instance.new("ParticleEmitter")
-            particleEmitter.Color = ColorSequence.new(Color3.fromRGB(100, 100, 100)) -- Gray particles
-            particleEmitter.LightEmission = 0.5
-            particleEmitter.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 5)}) -- Varying size
-            particleEmitter.Speed = NumberRange.new(1, 2)
-            particleEmitter.Rate = 20
-            particleEmitter.Lifetime = NumberRange.new(1)
-            particleEmitter.Rotation = NumberRange.new(0, 360)
-            particleEmitter.RotSpeed = NumberRange.new(-100, 100)
-            particleEmitter.Texture = "rbxassetid://7716160" -- Smoke texture
-            particleEmitter.Transparency = NumberSequence.new(0, 0.5)
-            particleEmitter.Acceleration = Vector3.new(0, 5, 0) -- Smoke rises
-            particleEmitter.Parent = character
-
-            -- Connect to the player removing event
-            player.CharacterRemoving:Connect(function()
-                for _, bodyPart in ipairs(character:GetChildren()) do
-                    if bodyPart:IsA("BasePart") then
-                        bodyPart:FindFirstChild("Outline"):Destroy()
-                        bodyPart:FindFirstChild("Highlight"):Destroy()
-                    end
-                end
-                billboard:Destroy()
-                particleEmitter:Destroy()
-            end)
         end
     end
 end
