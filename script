@@ -16,28 +16,23 @@ local function createPlayerESP(player)
         local rightLeg = character:FindFirstChild("RightFoot")
         local leftLeg = character:FindFirstChild("LeftFoot")
 
-        -- Create lines connecting body parts
-        local function createLine(startPart, endPart)
-            if startPart and endPart then
-                local line = Instance.new("LineHandleAdornment")
-                line.Name = "ESP_Line_" .. startPart.Name .. "_" .. endPart.Name
-                line.Parent = startPart
-                line.Adornee = startPart.Parent
-                line.Color3 = HighlightColor
-                line.Transparency = Transparency
-                line.Thickness = Thickness
-                line.ZIndex = 1
-                line.CurveSize = 0
-                line.Length = (startPart.Position - endPart.Position).magnitude
-                line.CFrame = CFrame.new(startPart.Position, endPart.Position) * CFrame.new(0, 0, -line.Length / 2)
-            end
+        -- Function to create a line between two points
+        local function createLine(startPoint, endPoint)
+            local line = Instance.new("Part")
+            line.Anchored = true
+            line.CanCollide = false
+            line.Size = Vector3.new(Thickness, Thickness, (startPoint - endPoint).magnitude)
+            line.CFrame = CFrame.new(startPoint, endPoint) * CFrame.new(0, 0, -line.Size.Z / 2)
+            line.Color = HighlightColor
+            line.Transparency = Transparency
+            line.Parent = torso
         end
 
-        createLine(torso, head)
-        createLine(torso, rightHand)
-        createLine(torso, leftHand)
-        createLine(torso, rightLeg)
-        createLine(torso, leftLeg)
+        createLine(torso.Position, head.Position)
+        createLine(torso.Position, rightHand.Position)
+        createLine(torso.Position, leftHand.Position)
+        createLine(torso.Position, rightLeg.Position)
+        createLine(torso.Position, leftLeg.Position)
     end
 end
 
