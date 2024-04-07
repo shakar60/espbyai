@@ -2,7 +2,7 @@
 local HighlightColor = Color3.fromRGB(255, 0, 0) -- Red color for highlighting
 local OutlineColor = Color3.fromRGB(0, 0, 0) -- Black color for outline
 local NameTextSize = 10 -- Size of the player's name
-local ParticleColor = ColorSequence.new(Color3.fromRGB(255, 0, 0)) -- Red particles
+local ParticleColor = ColorSequence.new(Color3.fromRGB(100, 100, 100)) -- Gray particles
 
 -- Function to create the highlight for a player
 local function createHighlight(player)
@@ -10,13 +10,36 @@ local function createHighlight(player)
     local character = player.Character
     if character and character:FindFirstChildOfClass("Humanoid") then
         local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-        if humanoidRootPart then
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        local head = character:FindFirstChild("Head")
+
+        if humanoidRootPart and humanoid and head then
+            -- Create an outline for the player's character
+            local outline = Instance.new("SelectionBox")
+            outline.Name = "Outline"
+            outline.Adornee = humanoidRootPart
+            outline.Color3 = OutlineColor
+            outline.LineThickness = 0.1
+            outline.SurfaceTransparency = 1
+            outline.Parent = humanoidRootPart
+
+            -- Create a highlight for the player's body
+            local highlight = Instance.new("BoxHandleAdornment")
+            highlight.Name = "Highlight"
+            highlight.Adornee = humanoidRootPart
+            highlight.AlwaysOnTop = true
+            highlight.Color3 = HighlightColor
+            highlight.Size = character:GetExtentsSize() * 1.1 -- Make the highlight slightly larger than the player's character
+            highlight.Transparency = 0.5
+            highlight.ZIndex = 5
+            highlight.Parent = humanoidRootPart
+
             -- Create a billboard GUI for the player's name
             local billboard = Instance.new("BillboardGui")
             billboard.Name = "NameTag"
             billboard.Size = UDim2.new(0, 100, 0, 20)
             billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset the name tag slightly above the player's humanoid root part
-            billboard.Parent = humanoidRootPart
+            billboard.Parent = head
 
             local nameLabel = Instance.new("TextLabel")
             nameLabel.Name = "NameLabel"
@@ -28,27 +51,7 @@ local function createHighlight(player)
             nameLabel.TextSize = NameTextSize
             nameLabel.Parent = billboard
 
-            -- Create an outline for the player's character
-            local outline = Instance.new("SelectionBox")
-            outline.Name = "Outline"
-            outline.Adornee = humanoidRootPart
-            outline.Color3 = OutlineColor
-            outline.LineThickness = 0.1
-            outline.SurfaceTransparency = 1
-            outline.Parent = humanoidRootPart
-
-            -- Create a highlight for the player's character
-            local highlight = Instance.new("BoxHandleAdornment")
-            highlight.Name = "Highlight"
-            highlight.Adornee = humanoidRootPart
-            highlight.AlwaysOnTop = true
-            highlight.Color3 = HighlightColor
-            highlight.Size = character:GetExtentsSize() * 1.1 -- Make the highlight slightly larger than the player's character
-            highlight.Transparency = 0.5
-            highlight.ZIndex = 5
-            highlight.Parent = humanoidRootPart
-
-            -- Create particle emitter
+            -- Create particle emitter for smoke effect
             local particleEmitter = Instance.new("ParticleEmitter")
             particleEmitter.Color = ParticleColor
             particleEmitter.LightEmission = 1
@@ -56,13 +59,18 @@ local function createHighlight(player)
             particleEmitter.Speed = NumberRange.new(1, 2)
             particleEmitter.Rate = 10
             particleEmitter.Lifetime = NumberRange.new(1)
-            particleEmitter.Parent = humanoidRootPart
+            particleEmitter.Rotation = NumberRange.new(0, 360)
+            particleEmitter.RotSpeed = NumberRange.new(-100, 100)
+            particleEmitter.Texture = "rbxassetid://250818607"
+            particleEmitter.Transparency = NumberSequence.new(0.5)
+            particleEmitter.Acceleration = Vector3.new(0, -5, 0)
+            particleEmitter.Parent = head
 
             -- Connect to the player removing event
             player.CharacterRemoving:Connect(function()
-                billboard:Destroy()
                 outline:Destroy()
                 highlight:Destroy()
+                billboard:Destroy()
                 particleEmitter:Destroy()
             end)
         end
