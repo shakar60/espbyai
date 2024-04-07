@@ -1,42 +1,41 @@
 -- Configuration
 local HighlightColor = Color3.fromRGB(255, 0, 0) -- Red color for highlighting
 local Transparency = 0.7 -- Transparency of the highlight
-local Thickness = 0.1 -- Thickness of the highlight
+local Thickness = 0.1 -- Thickness of the lines
 
--- Function to create an ESP for a specific body part of a player
-local function createBodyPartESP(player, bodyPart)
+-- Function to create an ESP for a player
+local function createPlayerESP(player)
     -- Check if the player has a character and humanoid
     local character = player.Character
     if character and character:FindFirstChildOfClass("Humanoid") then
-        local part = character:FindFirstChild(bodyPart)
-        if part then
-            -- Create a box outline for the body part
-            local outline = Instance.new("BoxHandleAdornment")
-            outline.Name = "ESP_" .. bodyPart
-            outline.Size = part.Size * 1.1 -- Slightly larger size for visibility
-            outline.Adornee = part
-            outline.Color3 = HighlightColor
-            outline.Transparency = Transparency
-            outline.Thickness = Thickness
-            outline.AlwaysOnTop = true
-            outline.Parent = part
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        local torso = character:FindFirstChild("Torso") or character:FindFirstChild("UpperTorso")
+        local head = character:FindFirstChild("Head")
+        local rightHand = character:FindFirstChild("RightHand")
+        local leftHand = character:FindFirstChild("LeftHand")
+        local rightLeg = character:FindFirstChild("RightLeg")
+        local leftLeg = character:FindFirstChild("LeftLeg")
 
-            -- Connect to the player removing event
-            player.CharacterRemoving:Connect(function()
-                outline:Destroy()
-            end)
+        -- Create lines connecting body parts
+        local function createLine(startPart, endPart)
+            if startPart and endPart then
+                local line = Instance.new("LineHandleAdornment")
+                line.Name = "ESP_Line_" .. startPart.Name .. "_" .. endPart.Name
+                line.Adornee = workspace
+                line.CFrame = CFrame.new(startPart.Position, endPart.Position)
+                line.Color3 = HighlightColor
+                line.Transparency = Transparency
+                line.Thickness = Thickness
+                line.Parent = startPart
+            end
         end
-    end
-end
 
--- Function to create ESP for all body parts of a player
-local function createPlayerESP(player)
-    createBodyPartESP(player, "Head")
-    createBodyPartESP(player, "Torso")
-    createBodyPartESP(player, "RightLeg")
-    createBodyPartESP(player, "LeftLeg")
-    createBodyPartESP(player, "RightArm")
-    createBodyPartESP(player, "LeftArm")
+        createLine(torso, head)
+        createLine(torso, rightHand)
+        createLine(torso, leftHand)
+        createLine(torso, rightLeg)
+        createLine(torso, leftLeg)
+    end
 end
 
 -- Function to initialize ESP for all existing players
