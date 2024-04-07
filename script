@@ -13,12 +13,14 @@ local function createESP(player)
         local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
         if humanoidRootPart then
             -- Create a box outline for the player's character
-            local outline = Instance.new("SelectionBox")
+            local outline = Instance.new("BoxHandleAdornment")
             outline.Name = "ESP"
-            outline.Adornee = character
+            outline.Size = humanoidRootPart.Size
+            outline.Adornee = humanoidRootPart
             outline.Color3 = HighlightColor
-            outline.LineThickness = OutlineThickness
-            outline.SurfaceTransparency = Transparency
+            outline.Transparency = Transparency
+            outline.ZIndex = 5
+            outline.AlwaysOnTop = true
             outline.Parent = humanoidRootPart
 
             -- Create a billboard GUI for the player's name
