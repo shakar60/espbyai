@@ -7,28 +7,23 @@ local function createPlayerESP(player)
     -- Check if the player has a character and humanoid
     local character = player.Character
     if character and character:FindFirstChildOfClass("Humanoid") then
-        local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")
         local head = character:FindFirstChild("Head")
-        local rightHand = character:FindFirstChild("RightHand")
-        local leftHand = character:FindFirstChild("LeftHand")
+        local torso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso")
         local rightLeg = character:FindFirstChild("RightFoot")
         local leftLeg = character:FindFirstChild("LeftFoot")
 
         -- Function to create a line between two points
         local function createLine(startPoint, endPoint)
-            local line = Instance.new("Part")
-            line.Anchored = true
-            line.CanCollide = false
-            line.Size = Vector3.new(Thickness, Thickness, (startPoint - endPoint).magnitude)
-            line.CFrame = CFrame.new(startPoint, endPoint) * CFrame.new(0, 0, -line.Size.Z / 2)
-            line.Color = HighlightColor
-            line.Material = Enum.Material.Neon -- Make the line material Neon
+            local line = Instance.new("LineHandleAdornment")
+            line.Color3 = HighlightColor
+            line.Transparency = 0
+            line.Thickness = Thickness
+            line.Adornee = workspace.Terrain
             line.Parent = workspace
+            line.CFrame = CFrame.new(startPoint, endPoint)
         end
 
-        createLine(torso.Position, head.Position)
-        createLine(torso.Position, rightHand.Position)
-        createLine(torso.Position, leftHand.Position)
+        createLine(head.Position, torso.Position)
         createLine(torso.Position, rightLeg.Position)
         createLine(torso.Position, leftLeg.Position)
     end
