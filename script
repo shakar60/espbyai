@@ -22,12 +22,21 @@ local function createHighlight(player)
             boxOutline.SurfaceTransparency = 1
             boxOutline.Parent = character
 
+            -- Create a part for the player's name
+            local namePart = Instance.new("Part")
+            namePart.Name = "NamePart"
+            namePart.Size = Vector3.new(0, 0, 0)
+            namePart.Anchored = true
+            namePart.CanCollide = false
+            namePart.Transparency = 1
+            namePart.Parent = character
+
             -- Create a billboard GUI for the player's name
             local billboard = Instance.new("BillboardGui")
             billboard.Name = "NameTag"
             billboard.Size = UDim2.new(0, 150, 0, 30) -- Slightly bigger size
             billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset the name tag slightly above the player's head
-            billboard.Parent = head
+            billboard.Parent = namePart
 
             local nameLabel = Instance.new("TextLabel")
             nameLabel.Name = "NameLabel"
@@ -39,8 +48,8 @@ local function createHighlight(player)
             nameLabel.TextSize = NameTextSize
             nameLabel.Parent = billboard
 
-            -- Place the name label within the box outline
-            nameLabel.Parent = boxOutline
+            -- Place the name part within the box outline
+            namePart.Parent = boxOutline
         end
     end
 end
