@@ -1,74 +1,47 @@
 -- Configuration
 local HighlightColor = Color3.fromRGB(255, 0, 0) -- Red color for highlighting
-local OutlineColor = Color3.fromRGB(255, 255, 255) -- White color for outline
-local NameTextColor = Color3.fromRGB(0, 0, 0) -- Black color for name text
-local NameTextSize = 14 -- Size of the player's name (medium size)
+local Transparency = 0.7 -- Transparency of the highlight
+local OutlineThickness = 0.1 -- Thickness of the outline
 
 -- Function to create the highlight for a player
-local function createHighlight(player)
+local function createESP(player)
     -- Check if the player has a character and humanoid
     local character = player.Character
     if character and character:FindFirstChildOfClass("Humanoid") then
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        local head = character:FindFirstChild("Head")
-
-        if humanoid and head then
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if humanoidRootPart then
             -- Create a box outline for the player's character
-            local boxOutline = Instance.new("SelectionBox")
-            boxOutline.Name = "BoxOutline"
-            boxOutline.Adornee = character
-            boxOutline.Color3 = OutlineColor
-            boxOutline.LineThickness = 0.2 -- Slightly bigger outline
-            boxOutline.SurfaceTransparency = 1
-            boxOutline.Parent = character
+            local outline = Instance.new("SelectionBox")
+            outline.Name = "ESP"
+            outline.Adornee = character
+            outline.Color3 = HighlightColor
+            outline.LineThickness = OutlineThickness
+            outline.SurfaceTransparency = Transparency
+            outline.Parent = humanoidRootPart
 
-            -- Create a part for the player's name
-            local namePart = Instance.new("Part")
-            namePart.Name = "NamePart"
-            namePart.Size = Vector3.new(0, 0, 0)
-            namePart.Anchored = true
-            namePart.CanCollide = false
-            namePart.Transparency = 1
-            namePart.Parent = character
-
-            -- Create a billboard GUI for the player's name
-            local billboard = Instance.new("BillboardGui")
-            billboard.Name = "NameTag"
-            billboard.Size = UDim2.new(0, 150, 0, 30) -- Slightly bigger size
-            billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset the name tag slightly above the player's head
-            billboard.Parent = namePart
-
-            local nameLabel = Instance.new("TextLabel")
-            nameLabel.Name = "NameLabel"
-            nameLabel.Size = UDim2.new(1, 0, 1, 0)
-            nameLabel.BackgroundTransparency = 1
-            nameLabel.TextColor3 = NameTextColor
-            nameLabel.Text = player.Name
-            nameLabel.Font = Enum.Font.SourceSansBold
-            nameLabel.TextSize = NameTextSize
-            nameLabel.Parent = billboard
-
-            -- Place the name part within the box outline
-            namePart.Parent = boxOutline
+            -- Connect to the player removing event
+            player.CharacterRemoving:Connect(function()
+                outline:Destroy()
+            end)
         end
     end
 end
 
--- Function to initialize highlights for all existing players
-local function initHighlights()
+-- Function to initialize ESP for all existing players
+local function initESP()
     for _, player in ipairs(game.Players:GetPlayers()) do
         if player ~= game.Players.LocalPlayer then
-            createHighlight(player)
+            createESP(player)
         end
     end
 end
 
--- Initialize highlights for existing players
-initHighlights()
+-- Initialize ESP for existing players
+initESP()
 
--- Connect to player added event to initialize highlights for new players
+-- Connect to player added event to initialize ESP for new players
 game.Players.PlayerAdded:Connect(function(player)
     if player ~= game.Players.LocalPlayer then
-        createHighlight(player)
+        createESP(player)
     end
 end)
