@@ -1,60 +1,49 @@
 -- Configuration
 local HighlightColor = Color3.fromRGB(255, 0, 0) -- Red color for highlighting
 local Transparency = 0.7 -- Transparency of the highlight
-local OutlineThickness = 0.1 -- Thickness of the outline
-local NameTextColor = Color3.fromRGB(255, 255, 255) -- Color of the player's name
-local NameTextSize = 12 -- Size of the player's name
+local Thickness = 0.1 -- Thickness of the highlight
 
--- Function to create the ESP for a player
-local function createESP(player)
+-- Function to create an ESP for a specific body part of a player
+local function createBodyPartESP(player, bodyPart)
     -- Check if the player has a character and humanoid
     local character = player.Character
     if character and character:FindFirstChildOfClass("Humanoid") then
-        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-        if humanoidRootPart then
-            -- Create a box outline for the player's character
+        local part = character:FindFirstChild(bodyPart)
+        if part then
+            -- Create a box outline for the body part
             local outline = Instance.new("BoxHandleAdornment")
-            outline.Name = "ESP"
-            outline.Size = humanoidRootPart.Size
-            outline.Adornee = humanoidRootPart
+            outline.Name = "ESP_" .. bodyPart
+            outline.Size = part.Size * 1.1 -- Slightly larger size for visibility
+            outline.Adornee = part
             outline.Color3 = HighlightColor
             outline.Transparency = Transparency
-            outline.ZIndex = 5
+            outline.Thickness = Thickness
             outline.AlwaysOnTop = true
-            outline.Parent = humanoidRootPart
-
-            -- Create a billboard GUI for the player's name
-            local billboard = Instance.new("BillboardGui")
-            billboard.Name = "NameTag"
-            billboard.Size = UDim2.new(0, 100, 0, 20)
-            billboard.StudsOffset = Vector3.new(0, 3, 0) -- Offset the name tag above the ESP
-            billboard.Adornee = humanoidRootPart
-            billboard.AlwaysOnTop = true
-            billboard.Parent = humanoidRootPart
-
-            local nameLabel = Instance.new("TextLabel")
-            nameLabel.Size = UDim2.new(1, 0, 1, 0)
-            nameLabel.BackgroundTransparency = 1
-            nameLabel.TextColor3 = NameTextColor
-            nameLabel.Text = player.Name
-            nameLabel.Font = Enum.Font.SourceSansBold
-            nameLabel.TextSize = NameTextSize
-            nameLabel.Parent = billboard
+            outline.Parent = part
 
             -- Connect to the player removing event
             player.CharacterRemoving:Connect(function()
                 outline:Destroy()
-                billboard:Destroy()
             end)
         end
     end
+end
+
+-- Function to create ESP for all body parts of a player
+local function createPlayerESP(player)
+    createBodyPartESP(player, "Head")
+    createBodyPartESP(player, "Torso")
+    createBodyPartESP(player, "RightLeg")
+    createBodyPartESP(player, "LeftLeg")
+    createBodyPartESP(player, "RightArm")
+    createBodyPartESP(player, "LeftArm")
 end
 
 -- Function to initialize ESP for all existing players
 local function initESP()
     for _, player in ipairs(game.Players:GetPlayers()) do
         if player ~= game.Players.LocalPlayer then
-            createESP(player)
+            createPlayerESP(player)
         end
     end
 end
@@ -65,6 +54,6 @@ initESP()
 -- Connect to player added event to initialize ESP for new players
 game.Players.PlayerAdded:Connect(function(player)
     if player ~= game.Players.LocalPlayer then
-        createESP(player)
+        createPlayerESP(player)
     end
 end)
