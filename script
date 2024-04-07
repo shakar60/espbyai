@@ -2,6 +2,8 @@
 local HighlightColor = Color3.fromRGB(255, 0, 0) -- Red color for highlighting
 local Transparency = 0.7 -- Transparency of the highlight
 local OutlineThickness = 0.1 -- Thickness of the outline
+local NameTextColor = Color3.fromRGB(255, 255, 255) -- Color of the player's name
+local NameTextSize = 12 -- Size of the player's name
 
 -- Function to create the highlight for a player
 local function createESP(player)
@@ -19,9 +21,27 @@ local function createESP(player)
             outline.SurfaceTransparency = Transparency
             outline.Parent = humanoidRootPart
 
+            -- Create a billboard GUI for the player's name
+            local billboard = Instance.new("BillboardGui")
+            billboard.Name = "NameTag"
+            billboard.Size = UDim2.new(0, 100, 0, 20)
+            billboard.StudsOffset = Vector3.new(0, 3, 0) -- Offset the name tag above the ESP
+            billboard.AlwaysOnTop = true
+            billboard.Parent = outline
+
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Size = UDim2.new(1, 0, 1, 0)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.TextColor3 = NameTextColor
+            nameLabel.Text = player.Name
+            nameLabel.Font = Enum.Font.SourceSansBold
+            nameLabel.TextSize = NameTextSize
+            nameLabel.Parent = billboard
+
             -- Connect to the player removing event
             player.CharacterRemoving:Connect(function()
                 outline:Destroy()
+                billboard:Destroy()
             end)
         end
     end
