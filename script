@@ -1,7 +1,7 @@
 -- Configuration
 local HighlightColor = Color3.fromRGB(255, 0, 0) -- Red color for highlighting
 local OutlineColor = Color3.fromRGB(0, 0, 0) -- Black color for outline
-local NameTextSize = 10 -- Size of the player's name
+local NameTextSize = 14 -- Size of the player's name (medium size)
 
 -- Function to create the highlight for a player
 local function createHighlight(player)
@@ -31,7 +31,7 @@ local function createHighlight(player)
                     highlight.AlwaysOnTop = true
                     highlight.Color3 = HighlightColor
                     highlight.Size = bodyPart.Size * 1.1 -- Make the highlight slightly larger than the body part
-                    highlight.Transparency = 0.5
+                    highlight.Transparency = 0.3 -- Less transparent
                     highlight.ZIndex = 5
                     highlight.Parent = bodyPart
                 end
@@ -40,7 +40,7 @@ local function createHighlight(player)
             -- Create a billboard GUI for the player's name
             local billboard = Instance.new("BillboardGui")
             billboard.Name = "NameTag"
-            billboard.Size = UDim2.new(0, 100, 0, 20)
+            billboard.Size = UDim2.new(0, 150, 0, 30) -- Slightly bigger size
             billboard.StudsOffset = Vector3.new(0, 2, 0) -- Offset the name tag slightly above the player's head
             billboard.Parent = head
 
@@ -56,7 +56,7 @@ local function createHighlight(player)
 
             -- Create particle emitter for smoke effect
             local particleEmitter = Instance.new("ParticleEmitter")
-            particleEmitter.Color = ColorSequence.new(Color3.fromRGB(50, 50, 50)) -- Dark gray particles
+            particleEmitter.Color = ColorSequence.new(Color3.fromRGB(100, 100, 100)) -- Gray particles
             particleEmitter.LightEmission = 0.5
             particleEmitter.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 5)}) -- Varying size
             particleEmitter.Speed = NumberRange.new(1, 2)
