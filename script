@@ -12,30 +12,14 @@ local function createHighlight(player)
         local head = character:FindFirstChild("Head")
 
         if humanoid and head then
-            -- Iterate through each body part of the character
-            for _, bodyPart in ipairs(character:GetChildren()) do
-                if bodyPart:IsA("BasePart") then
-                    -- Create an outline for the player's character
-                    local outline = Instance.new("SelectionBox")
-                    outline.Name = "Outline"
-                    outline.Adornee = bodyPart
-                    outline.Color3 = OutlineColor
-                    outline.LineThickness = 0.1
-                    outline.SurfaceTransparency = 1
-                    outline.Parent = bodyPart
-
-                    -- Create a highlight for the player's body
-                    local highlight = Instance.new("BoxHandleAdornment")
-                    highlight.Name = "Highlight"
-                    highlight.Adornee = bodyPart
-                    highlight.AlwaysOnTop = true
-                    highlight.Color3 = HighlightColor
-                    highlight.Size = bodyPart.Size * 1.1 -- Make the highlight slightly larger than the body part
-                    highlight.Transparency = 0.2 -- Less transparent
-                    highlight.ZIndex = 5
-                    highlight.Parent = bodyPart
-                end
-            end
+            -- Create a box outline for the player's character
+            local boxOutline = Instance.new("SelectionBox")
+            boxOutline.Name = "BoxOutline"
+            boxOutline.Adornee = character
+            boxOutline.Color3 = OutlineColor
+            boxOutline.LineThickness = 0.1
+            boxOutline.SurfaceTransparency = 1
+            boxOutline.Parent = character
 
             -- Create a billboard GUI for the player's name
             local billboard = Instance.new("BillboardGui")
@@ -53,6 +37,9 @@ local function createHighlight(player)
             nameLabel.Font = Enum.Font.SourceSansBold
             nameLabel.TextSize = NameTextSize
             nameLabel.Parent = billboard
+
+            -- Place the name label within the box outline
+            nameLabel.Parent = boxOutline
         end
     end
 end
